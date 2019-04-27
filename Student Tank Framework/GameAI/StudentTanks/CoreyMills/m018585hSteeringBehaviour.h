@@ -3,6 +3,7 @@
 
 #include "m018585hCommons.h"
 #include "../../BaseTank.h"
+#include "../../ObstacleManager.h"
 
 struct Feeler
 {
@@ -49,9 +50,9 @@ public:
 	Vector2D Evade(m018585hTank* myTank, BaseTank* pursuer, bool bypass);
 
 	Vector2D Wander(m018585hTank* myTank, bool bypass);
-	Vector2D ObstacleAvoidance(m018585hTank* myTank, const std::vector<GameObject*> &obstacles, bool bypass);
+	Vector2D ObstacleAvoidance(m018585hTank* myTank, bool bypass);
 	Vector2D Interpose(m018585hTank* myTank, BaseTank* agentA, BaseTank* agentB, bool bypass);
-	Vector2D Hide(m018585hTank* myTank, BaseTank* target, vector<GameObject*>& obstacles, bool bypass);
+	Vector2D Hide(m018585hTank* myTank, BaseTank* target, bool bypass);
 	Vector2D FollowPath(m018585hTank* myTank, vector<Vector2D>& path, bool bypass);
 
 	void CalculateFeelers(m018585hTank* myTank);

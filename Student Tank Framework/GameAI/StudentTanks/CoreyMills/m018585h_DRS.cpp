@@ -75,18 +75,19 @@ bool m018585h_DRS::FindPath(const Vector2D startPosition, const Vector2D endPosi
 		//----------------------------------------------------------------------
 		pathSearch = RefinePath(pathSearch);
 
-		double dist = Vec2DDistanceSq(path->at(0), startPosition);
-
-		if (path->at(0) == startPosition || dist < 900)
+		if (!path->empty())
 		{
-			cout << endl;
+			double dist = Vec2DDistanceSq(path->at(0), startPosition);
 
-			cout << "startPoint: " << (int)startPosition.x << ", " << (int)startPosition.y << endl;
-			cout << "pathPoint: " << (int)path->at(0).x << ", " << (int)path->at(0).y << endl;
+			if (path->at(0) == startPosition || dist < 900)
+			{
+				cout << endl;
+				cout << "startPoint: " << (int)startPosition.x << ", " << (int)startPosition.y << endl;
+				cout << "pathPoint: " << (int)path->at(0).x << ", " << (int)path->at(0).y << endl;
+				cout << endl;
 
-			cout << endl;
-
-			path->erase(path->begin());
+				path->erase(path->begin());
+			}
 		}
 
 		path->insert(path->begin(), pathSearch->begin(), pathSearch->end());

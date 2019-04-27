@@ -89,6 +89,8 @@ public:
 
 	Vector2D GetManFireDir() { return mManFireDirection; }
 
+	void SetObRotated(bool newVal) { mObRotated = newVal; }
+
 private:
 	m018585hSteeringBehaviour* mSteering;
 	m018585hFuSM_Manager* mFuSM_Manager;
@@ -112,6 +114,6 @@ private:
 
 	float mRotationBuffer, mMovementBuffer;
 	float mRotationAmount;
-	bool mRotating, mMoving;
+	bool mRotating, mMoving, mObRotated;
 };
 #endif //M018585HTANK_H

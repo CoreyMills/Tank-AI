@@ -128,8 +128,7 @@ void m018585hFuSM_Run::Update(m018585hTank & myTank, float deltaTime)
 		if (mPath->empty())
 		{
 			mEvading = false;
-			Vector2D temp = myTank.GetSteeringBehaviour()->Hide(
-				&myTank, mTargetTank, ObstacleManager::Instance()->GetObstacles(), true);
+			Vector2D temp = myTank.GetSteeringBehaviour()->Hide(&myTank, mTargetTank, true);
 
 			myTank.GetPathFinder()->FindPath(temp, myTank.GetCentralPosition(), mPath);
 		}
@@ -162,24 +161,27 @@ void m018585hFuSM_Run::Update(m018585hTank & myTank, float deltaTime)
 			//enemy is in front of me
 			if(ClosestPoint(myTank.GetCentralPosition() + myTank.GetHeading(), myTank.GetCentralPosition(), mTargetTank->GetCentralPosition()))
 			{
-				myTank.GetSteeringBehaviour()->Brake(&myTank, 0.9f, true);
 				dropMine = false;
+				myTank.GetSteeringBehaviour()->Brake(&myTank, 0.9f, true);
 			}
 		}
 		else
 		{
+			dropMine = true;
+
 			mStateForces.push_back(myTank.GetSteeringBehaviour()->FollowPath(&myTank, *mPath, true));
 			if (!mPath->empty())
 				myTank.SetTargetPos(mPath->at(0));
-
-			dropMine = true;
 		}
 	}
 	else
 	{
-		cout << "evade" << endl;
-		mStateForces.push_back(myTank.GetSteeringBehaviour()->Evade(&myTank, mTargetTank, true));
 		dropMine = true;
+
+		mStateForces.push_back(myTank.GetSteeringBehaviour()->Evade(&myTank, mTargetTank, true));
+		
+		Vector2D toTarget = mTargetTank->GetCentralPosition() - myTank.GetCentralPosition();
+		//myTank.SetTargetPos(toTarget.GetReverse() * myTank.GetVelocity().Length());
 	}
 
 	//Drop Mine

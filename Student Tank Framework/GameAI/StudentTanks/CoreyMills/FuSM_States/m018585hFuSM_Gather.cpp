@@ -197,12 +197,11 @@ void m018585hFuSM_Gather::Update(m018585hTank & myTank, float deltaTime)
 		}
 	}
 
-
 	if (mTargetPickUp)
 	{
 		if (mPathNeeded)
 		{
-			if (!mPath->empty())
+			if(!mPath->empty())
 				mStateForces.push_back(myTank.GetSteeringBehaviour()->FollowPath(&myTank, *mPath, true));
 
 			if (!mPath->empty())

@@ -21,13 +21,12 @@ float m018585hFuSM_ReachEndPoint::CalculateActivation(m018585hTank & myTank, vec
 {
 	double dist = Vec2DDistance(myTank.GetCentralPosition(), mEndPoint);
 
-	if (PickUpManager::Instance()->GetAllPickUps().empty() && dist > 10)
+	if (PickUpManager::Instance()->GetAllPickUps().empty() && dist > 20)
 		mActivationLevels.push_back(1.0f);
-
-	mActivationLevels.push_back(0.0f);
+	else
+		mActivationLevels.push_back(0.0f);
 
 	return m018585hFuSM_Base::CalculateActivation(myTank, seenTanks, heardTanks);
-
 }
 
 void m018585hFuSM_ReachEndPoint::Update(m018585hTank & myTank, float deltaTime)

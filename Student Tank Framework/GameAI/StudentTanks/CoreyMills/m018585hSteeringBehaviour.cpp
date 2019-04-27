@@ -20,7 +20,7 @@ m018585hSteeringBehaviour::m018585hSteeringBehaviour()
 	mChaseLengthSq = 900;
 
 	//Feelers
-	_LargeFeelerLength = 20.0f;
+	_LargeFeelerLength = 22.0f;
 	_smallFeelerLength = 15.0f;
 }
 
@@ -178,10 +178,12 @@ Vector2D m018585hSteeringBehaviour::Wander(m018585hTank* myTank, bool bypass)
 	return { 0, 0 };
 }
 
-Vector2D m018585hSteeringBehaviour::ObstacleAvoidance(m018585hTank* myTank, const std::vector<GameObject*> &obstacles, bool bypass)
+Vector2D m018585hSteeringBehaviour::ObstacleAvoidance(m018585hTank* myTank, bool bypass)
 {
 	if (mObstacleAvoidanceOn || bypass)
 	{
+		vector<GameObject*> obstacles = ObstacleManager::Instance()->GetObstacles();
+
 		Vector2D totalForce;
 		mDebugVectors.clear();
 		int count = 0;
@@ -238,10 +240,12 @@ Vector2D m018585hSteeringBehaviour::Interpose(m018585hTank* myTank, BaseTank*  a
 }
 
 //returns bestHidingSpot, use arrive or pathfinding to reach the point 
-Vector2D m018585hSteeringBehaviour::Hide(m018585hTank* myTank, BaseTank* target, vector<GameObject*>& obstacles, bool bypass)
+Vector2D m018585hSteeringBehaviour::Hide(m018585hTank* myTank, BaseTank* target, bool bypass)
 {
 	if (mHideOn || bypass)
 	{
+		vector<GameObject*> obstacles = ObstacleManager::Instance()->GetObstacles();
+
 		double distToClosest = MaxDouble;
 		Vector2D bestHidingSpot;
 		std::vector<GameObject*>::iterator curOb = obstacles.begin();
@@ -300,8 +304,11 @@ Vector2D m018585hSteeringBehaviour::FollowPath(m018585hTank* myTank, vector<Vect
 			{
 				float distNextSq = (float)Vec2DDistanceSq(myTank->GetCentralPosition(), path.at(1));;
 				
-				if (distCurrentSq > distNextSq)
+				if (distCurrentSq > distNextSq &&
+					Raycast(myTank->GetCentralPosition(), path.at(1), ObstacleManager::Instance()->GetObstacles()))
+				{
 					path.erase(path.begin());
+				}
 			}
 		}
 
@@ -309,7 +316,7 @@ Vector2D m018585hSteeringBehaviour::FollowPath(m018585hTank* myTank, vector<Vect
 		{
 			if (path.size() == 1)
 			{
-				return Arrive(myTank, path.at(0), 5.0f, 0.9f, normal, true);
+				return Arrive(myTank, path.at(0), 0.0f, 0.95f, normal, true);
 			}
 			else 
 			{
@@ -352,16 +359,15 @@ void m018585hSteeringBehaviour::CalculateFeelers(m018585hTank * myTank)
 	mDetectionFeelers.push_back(Feeler(Vec2DNormalize(Vector2D(myTank->GetSide().x, myTank->GetSide().y)), true, 1.0f));	     //East - Short
 	mDetectionFeelers.push_back(Feeler(Vec2DNormalize(Vector2D(-myTank->GetSide().x, -myTank->GetSide().y)), true, 1.0f));    //West - Short
 
-
 	for (unsigned int i = 0; i < mDetectionFeelers.size(); i++)
 	{
 		if (!mDetectionFeelers.at(i).insideFeeler)
 		{
-			mDetectionFeelers.at(i).feeler = Vec2DNormalize(mDetectionFeelers.at(i).feeler) * (_LargeFeelerLength + (myTank->GetVelocity().Length() / 2));
+			mDetectionFeelers.at(i).feeler = Vec2DNormalize(mDetectionFeelers.at(i).feeler) * (_LargeFeelerLength + (myTank->GetVelocity().Length()));
 		}
 		else
 		{
-			mDetectionFeelers.at(i).feeler = Vec2DNormalize(mDetectionFeelers.at(i).feeler) * (_smallFeelerLength + (myTank->GetVelocity().Length() / 4));
+			mDetectionFeelers.at(i).feeler = Vec2DNormalize(mDetectionFeelers.at(i).feeler) * (_smallFeelerLength + (myTank->GetVelocity().Length() / 2));
 		}
 	}
 }

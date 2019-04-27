@@ -7,7 +7,6 @@
 m018585hFuSM_ObAvoidance::m018585hFuSM_ObAvoidance() : m018585hFuSM_Base()
 {
 	stateType = FuSM_AVOID;
-	mInitialBrake = false;
 }
 
 m018585hFuSM_ObAvoidance::~m018585hFuSM_ObAvoidance()
@@ -39,35 +38,24 @@ float m018585hFuSM_ObAvoidance::CalculateActivation(m018585hTank & myTank, vecto
 void m018585hFuSM_ObAvoidance::Update(m018585hTank& myTank, float deltaTime)
 {
 	//multiply by activation level
-	Vector2D obForce = myTank.GetSteeringBehaviour()->ObstacleAvoidance(&myTank, ObstacleManager::Instance()->GetObstacles(), true);
+	Vector2D obForce = myTank.GetSteeringBehaviour()->ObstacleAvoidance(&myTank, true);
 	
 	if (!obForce.isZero())
 	{
-		float rotBuffer = 0.00872665f;
-
 		Vector2D tempForce = Vec2DNormalize(obForce);
 
 		float angle = (float)asin((myTank.Cross(tempForce, myTank.GetHeading()) /
 			obForce.Length() * myTank.GetHeading().Length()));
 
-		////right
-		//if (angle >= rotBuffer)
-		//{
-		//	myTank.RotateHeadingByRadian(-0.01f, deltaTime);
-		//}
-		////left
-		//else if (angle <= -rotBuffer)
-		//{
-		//	myTank.RotateHeadingByRadian(0.01f, deltaTime);
-		//}
-
-		if (mOldPos == myTank.GetCentralPosition())
+		Vector2D centralPos = myTank.GetCentralPosition();
+		if (mOldPos == centralPos)
 		{
+			myTank.SetObRotated(true);
 			myTank.RotateHeadingByRadian(angle * 10, deltaTime);
 
 			tempForce = obForce;
 			tempForce.Truncate(myTank.GetMaxForce());
-			myTank.GetVelocity() = tempForce * 1.2f;
+			myTank.GetVelocity() = tempForce * 1.5f;
 		}
 
 		mStateForces.push_back(obForce);

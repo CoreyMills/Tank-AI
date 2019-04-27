@@ -1,2 +1,2 @@
-﻿  m018585hFuSM_ObAvoidance.cpp
-c:\users\m018585h\downloads\student tank framework\gameai\studenttanks\coreymills\fusm_states\m018585hfusm_obavoidance.cpp(10): error C2065: 'mInitialBrake': undeclared identifier
+﻿  m018585hTank.cpp
+  GameAI.vcxproj -> D:\GitHub\Tank-AI\Student Tank Framework\Debug\GameAI.exe

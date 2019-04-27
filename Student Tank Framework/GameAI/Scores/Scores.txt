@@ -1231,3 +1231,111 @@ Tanks destroyed: 0	= 0
 Crates collected: 1	= 2.5
 Survival bonus': 1	= 5
 -------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 3	= 15
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 1		= 3
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 3	= 15
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 3	= 15
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 1		= 3
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 4	= 20
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 1		= 3
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 6	= 30
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 3	= 15
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 2		= 6
+Tanks destroyed: 0	= 0
+Crates collected: 3	= 7.5
+Survival bonus': 12	= 60
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 1		= 3
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 8	= 40
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: Guardian2   SCORE: 0
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 0	= 0
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 5
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 1	= 5
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 7.5
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 1	= 2.5
+Survival bonus': 1	= 5
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 10
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 2	= 10
+-------------------------------------------------------------

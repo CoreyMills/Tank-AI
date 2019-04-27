@@ -1,8 +1,8 @@
-#include <iostream>
-
 #include "m018585hTank.h"
 #include "../../TankManager.h"
 #include "../../C2DMatrix.h"
+
+#include <iostream>
 
 //--------------------------------------------------------------------------------------------------
 
@@ -23,6 +23,7 @@ m018585hTank::m018585hTank(SDL_Renderer* renderer, TankSetupDetails details): Ba
 	mFuSMActivated = true;
 	mSpaceKeyDown = false;
 	mMoving = true;
+	mObRotated = false;
 
 	//10 degrees
 	//_rotationBuffer1 = 0.174533f;
@@ -145,7 +146,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 	{
 		HandleInput(deltaTime, e);
 
-		Vector2D obForce = mSteering->ObstacleAvoidance(this, ObstacleManager::Instance()->GetObstacles(), false);
+		/*Vector2D obForce = mSteering->ObstacleAvoidance(this, false);
 		if (!obForce.isZero())
 		{
 			if (!mInitialBrake)
@@ -174,7 +175,31 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		else
 		{
 			mInitialBrake = false;
+		}*/
+		
+		///////////////////////////////////////////////////
+		Vector2D obForce = mSteering->ObstacleAvoidance(this, true);
+
+		if (!obForce.isZero())
+		{
+			Vector2D tempForce = Vec2DNormalize(obForce);
+
+			float angle = (float)asin((Cross(tempForce, mHeading) /
+				obForce.Length() * mHeading.Length()));
+
+			if (mOldPos == GetCentralPosition())
+			{
+				mObRotated = true;
+				RotateHeadingByRadian(angle * 10, deltaTime);
+
+				tempForce = obForce;
+				tempForce.Truncate(mMaxForce);
+				mVelocity = tempForce * 1.5f;
+			}
+			mSteering->AddForce(obForce);
 		}
+		mOldPos = GetCentralPosition();
+		///////////////////////////////////////////////////
 
 		//Follow Path
 		mSteering->AddForce(mSteering->FollowPath(this, mPath, false));
@@ -242,12 +267,12 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		}*/
 
 		ChangeRotationStats(0.00872665f, 0.001f);
-		ChangeMovementStats(0.0f);
+		//ChangeMovementStats(0.0f);
 	}
 	else
 	{
 		ChangeRotationStats(0.0349066f, 0.01f);
-		ChangeMovementStats(0.01f);
+		//ChangeMovementStats(0.01f);
 	}
 
 	if (mSteering->CheckEvade() || mSteering->CheckWander())
@@ -274,11 +299,13 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		toTarget = mTargetPos - GetCentralPosition();
 	}
 
-	if (!toTarget.isZero())
+	//if (!toTarget.isZero())
 	{
-		if (toTarget.LengthSq() > 225 || mSteering->CheckWander() || mSteering->CheckEvade())
+		if (toTarget.LengthSq() > 10 || mSteering->CheckWander() || mSteering->CheckEvade())
 		{
-			toTarget = mVelocity;
+			//if (mFuSMActivated)
+				toTarget = mVelocity;
+
 			toTarget.Normalize();
 
 			float angle = (float)asin((Cross(toTarget, mHeading) /
@@ -289,10 +316,21 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 				mRotationBuffer /= 2;
 			}
 
-			if (/*abs(angle) < mRotationBuffer * 30 &&*/ mSteering->CheckEvade() ||
-				ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
-			{  
-				mMoving = true;
+			if (mFuSMActivated)
+			{
+				if (mSteering->CheckEvade() ||
+					ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
+				{
+					mMoving = true;
+				}
+			}
+			else
+			{
+				if (mSteering->CheckEvade() || /*abs(angle) < mRotationBuffer &&*/
+					ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
+				{
+					mMoving = true;
+				}
 			}
 
 			//right
@@ -316,8 +354,8 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		}
 		else
 		{
-			if(mSteering->CheckBrake())
-				mSteering->Brake(this, 0.98f, false);
+			//if(mSteering->CheckBrake())
+				//mSteering->Brake(this, 0.98f, false);
 		}
 	}
 
@@ -723,11 +761,13 @@ void m018585hTank::AttackEnemyTank()
 
 void m018585hTank::MoveInHeadingDirection(float deltaTime)
 {
-	Vector2D newPos = mOldPos = GetPosition();
+	Vector2D newPos = GetPosition();
 	Vector2D acceleration = mSteering->Calculate(this) / GetMass();
 
 	mVelocity += acceleration * deltaTime;
 	mVelocity.Truncate(GetMaxSpeed());
+
+	//cout << mVelocity.Length() << endl;
 
 	if (mVelocity != mVelocity)
 		mVelocity.Zero();
@@ -739,11 +779,11 @@ void m018585hTank::MoveInHeadingDirection(float deltaTime)
 		if (!mMoving)
 			mVelocity.Truncate(GetMaxSpeed() / 6);
 
-		if (mFuSMActivated)
+		//if (mFuSMActivated)
 			mVelocity = mVelocity * 0.99f;
 	}
-	//else
-	if (mMoving)
+
+	if (mMoving/* || !mFuSMActivated*/)
 	{
 		mMoving = false;
 	
@@ -762,6 +802,12 @@ void m018585hTank::MoveInHeadingDirection(float deltaTime)
 
 void m018585hTank::RotateHeadingByRadian(double radian, float deltaTime)
 {
+	if (mObRotated)
+	{
+		mObRotated = false;
+		return;
+	}
+
 	mRotating = true;
 
 	//Clamp the amount to turn to the max turn rate.
