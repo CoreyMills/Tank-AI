@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
   <!--BattleGround-->
-  <!--tank studentName="m018585hTank" tankType="2" tankPath="StudentTanks\CoreyMills\Images\m018585hTankMedium.png" manPath="StudentTanks\CoreyMills\Images\m018585hTankMediumMan.png" x="450" y="500" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/>
-  <tank studentName="ControlledTank" tankType="1" tankPath="Images\TankSmall.png" manPath="Images\TankSmallMan.png" x="450" y="50" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/-->
+  <tank studentName="m018585hTank" tankType="2" tankPath="StudentTanks\CoreyMills\Images\m018585hTankMedium.png" manPath="StudentTanks\CoreyMills\Images\m018585hTankMediumMan.png" x="450" y="500" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/>
+  <tank studentName="ControlledTank" tankType="1" tankPath="Images\TankSmall.png" manPath="Images\TankSmallMan.png" x="450" y="50" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/>
 
   <!--Arena-->
-  <tank studentName="m018585hTank" tankType="2" tankPath="StudentTanks\CoreyMills\Images\m018585hTankMedium.png" manPath="StudentTanks\CoreyMills\Images\m018585hTankMediumMan.png" x="50" y="50" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/>
+  <!--tank studentName="m018585hTank" tankType="2" tankPath="StudentTanks\CoreyMills\Images\m018585hTankMedium.png" manPath="StudentTanks\CoreyMills\Images\m018585hTankMediumMan.png" x="50" y="50" health="100" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="1" rightCannon="1"/>
   <tank studentName="Guardian1" tankType="2" tankPath="Images\Guardian.bmp" manPath="Images\TankSmallMan.png" x="448" y="180" health="1000" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="0" rightCannon="0"/>
-  <tank studentName="Guardian2" tankType="2" tankPath="Images\Guardian.bmp" manPath="Images\TankSmallMan.png" x="672" y="530"  health="1000" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="0" rightCannon="0"/>
+  <tank studentName="Guardian2" tankType="2" tankPath="Images\Guardian.bmp" manPath="Images\TankSmallMan.png" x="672" y="530"  health="1000" bullets="100" rockets="100" mines="5" turnRate="5" fuel="6000" mass="1" maxspeed="75" leftCannon="0" rightCannon="0"/-->
 </data>

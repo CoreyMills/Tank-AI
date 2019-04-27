@@ -156,6 +156,9 @@ void m018585hFuSM_Attack::Update(m018585hTank & myTank, float deltaTime)
 		Vector2D toTarget = mTargetTank->GetCentralPosition() - myTank.GetCentralPosition();
 		toTarget.Normalize();
 
+		Vector2D toTLookAhead = (mTargetTank->GetCentralPosition() + (mTargetTank->GetVelocity() * 0.7f)) - myTank.GetCentralPosition();
+		toTLookAhead.Normalize();
+
 		float angle = (float)asin((myTank.Cross(toTarget, myTank.GetHeading()) /
 			toTarget.Length() * myTank.GetHeading().Length()));
 
@@ -165,12 +168,15 @@ void m018585hFuSM_Attack::Update(m018585hTank & myTank, float deltaTime)
 			if (angle <= buffer && angle >= -buffer)
 			{
 				myTank.ChangeState(TANKSTATE_CANNONFIRE);
-				myTank.GetSteeringBehaviour()->Brake(&myTank, 0.97f, true);
+				myTank.SetEnemyLookAhead(toTLookAhead);
+
+				if(dist < 5625)
+					myTank.GetSteeringBehaviour()->Brake(&myTank, 0.97f, true);
 			}
 		}
-	
-		angle = (float)asin((myTank.Cross(myTank.GetManFireDir(), toTarget) /
-			myTank.GetManFireDir().Length() * toTarget.Length()));
+
+		angle = (float)asin((myTank.Cross(myTank.GetManFireDir(), toTLookAhead) /
+			myTank.GetManFireDir().Length() * toTLookAhead.Length()));
 
 		myTank.RotateManByRadian(angle, deltaTime);
 	}

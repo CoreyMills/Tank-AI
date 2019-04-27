@@ -146,37 +146,6 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 	{
 		HandleInput(deltaTime, e);
 
-		/*Vector2D obForce = mSteering->ObstacleAvoidance(this, false);
-		if (!obForce.isZero())
-		{
-			if (!mInitialBrake)
-			{
-				mInitialBrake = true;
-				//mSteering->Brake(this, 0.99999f, true);
-			}
-
-			Vector2D tempForce = Vec2DNormalize(obForce);
-			float angle = (float)asin((Cross(tempForce, mHeading) /
-				obForce.Length() * mHeading.Length()));
-
-			RotateHeadingByRadian(angle * 0.5f, deltaTime);
-
-			if (mOldPos == GetPosition())
-			{
-				RotateHeadingByRadian(angle * 2, deltaTime);
-
-				tempForce = obForce;
-				tempForce.Truncate(mMaxForce);
-				mVelocity = tempForce * 2;
-			}
-
-			mSteering->AddForce(obForce);
-		}
-		else
-		{
-			mInitialBrake = false;
-		}*/
-
 		///////////////////////////////////////////////////
 		Vector2D obForce = mSteering->ObstacleAvoidance(this, true);
 
@@ -216,16 +185,14 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		if (mSteering->CheckPursuit())
 		{
 			if (!mTargetTank)
-			{
 				FindEnemyTank();
-			}
 			else
 			{
 				//Target Died
 				if (mTargetTank->GetHealth() <= 0)
 					mTargetTank = nullptr;
 			}
-			AttackEnemyTank();
+			AttackEnemyTank(deltaTime);
 			//cout << "Health: " << mTargetTank->GetHealth() << endl;
 		}
 
@@ -283,6 +250,13 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 			mRotateBlocked = true;
 
 		toTarget = mVelocity;
+
+		if (!mEnemyLookAhead.isZero())
+		{
+			toTarget = mEnemyLookAhead;
+			mEnemyLookAhead.Zero();
+		}
+
 		toTarget.Normalize();
 
 		float angle = (float)asin((Cross(toTarget, mHeading) /
@@ -293,7 +267,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 			mRotationBuffer /= 2;
 		}
 
-		if (mSteering->CheckEvade() || /*abs(angle) < mRotationBuffer * 20 ||*/
+		if (mSteering->CheckEvade() ||
 			ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
 		{
 			mMoving = true;
@@ -683,7 +657,7 @@ void m018585hTank::FindEnemyTank()
 
 //--------------------------------------------------------------------------------------------------
 
-void m018585hTank::AttackEnemyTank()
+void m018585hTank::AttackEnemyTank(float deltaTime)
 {
 	//exit if no target
 	if (!mTargetTank)
@@ -692,32 +666,42 @@ void m018585hTank::AttackEnemyTank()
 		return;
 	}
 
+	mMoving = true;
+
 	float dist = (float)Vec2DDistanceSq(GetCentralPosition(), mTargetTank->GetCentralPosition());
-
-	//160^2
-	if (dist < 25600)
-	{
-		ChangeState(TANKSTATE_MANFIRE);
-	}
-
+	
 	Vector2D toTarget = mTargetTank->GetCentralPosition() - GetCentralPosition();
 	toTarget.Normalize();
 
-	float angle = (float)asin((Cross(toTarget, mHeading) /
-		toTarget.Length() * mHeading.Length()));
+	//Move man to look ahead of enemy
+	Vector2D toTLookAhead = (mTargetTank->GetCentralPosition() + (mTargetTank->GetVelocity() * 0.7f)) - GetCentralPosition();
+	toTLookAhead.Normalize();
+
+	float angle = (float)asin((Cross(GetManFireDir(), toTLookAhead) /
+		GetManFireDir().Length() * toTLookAhead.Length()));
+
+	RotateManByRadian(angle, deltaTime);
+
+	//160^2
+	if (dist < 25600)
+		ChangeState(TANKSTATE_MANFIRE);
 
 	if (dist < 18225)
 	{
 		float buffer = 0.10472f;
+		
+		angle = (float)asin((Cross(toTarget, mHeading) /
+			toTarget.Length() * mHeading.Length()));
+
 		if (angle <= buffer && angle >= -buffer)
 		{
 			ChangeState(TANKSTATE_CANNONFIRE);
-			mSteering->FollowPathOff();
-			//mSteering->AddForce(mSteering->Brake(this, 0.97f));
-		}
 
-		if (mSteering->CheckBrake())
-			mSteering->Brake(this, 0.97f, false);
+			mEnemyLookAhead = toTLookAhead;
+
+			if (mSteering->CheckBrake() && dist < 5625)
+				mSteering->Brake(this, 0.97f, false);
+		}
 	}
 }
 

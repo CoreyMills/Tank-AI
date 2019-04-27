@@ -65,7 +65,7 @@ public:
 
 	void FindEnemyTank();
 
-	void AttackEnemyTank();
+	void AttackEnemyTank(float deltaTime);
 
 	void SetVelocity(Vector2D newVel) { mVelocity = newVel; }
 	
@@ -92,6 +92,8 @@ public:
 	void SetObRotated(bool newVal) { mObRotated = newVal; }
 	void SetRotateBlocked(bool newVal) { mRotateBlocked = newVal; }
 
+	void SetEnemyLookAhead(Vector2D v1) { mEnemyLookAhead = v1; }
+
 private:
 	m018585hSteeringBehaviour* mSteering;
 	m018585hFuSM_Manager* mFuSM_Manager;
@@ -104,6 +106,9 @@ private:
 
 	BaseTank* mTargetTank;
 	Vector2D mTargetPos;
+
+	//for pursuit
+	Vector2D mEnemyLookAhead;
 
 	Vector2D mOldPos;
 
