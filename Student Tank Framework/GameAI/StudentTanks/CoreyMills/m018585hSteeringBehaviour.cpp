@@ -20,7 +20,7 @@ m018585hSteeringBehaviour::m018585hSteeringBehaviour()
 	mChaseLengthSq = 900;
 
 	//Feelers
-	_LargeFeelerLength = 22.0f;
+	_LargeFeelerLength = 20.0f;
 	_smallFeelerLength = 15.0f;
 }
 

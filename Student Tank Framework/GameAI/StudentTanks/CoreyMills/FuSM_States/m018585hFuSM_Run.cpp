@@ -163,6 +163,7 @@ void m018585hFuSM_Run::Update(m018585hTank & myTank, float deltaTime)
 			{
 				dropMine = false;
 				myTank.GetSteeringBehaviour()->Brake(&myTank, 0.9f, true);
+				myTank.SetRotateBlocked(true);
 			}
 		}
 		else
@@ -180,7 +181,7 @@ void m018585hFuSM_Run::Update(m018585hTank & myTank, float deltaTime)
 
 		mStateForces.push_back(myTank.GetSteeringBehaviour()->Evade(&myTank, mTargetTank, true));
 		
-		Vector2D toTarget = mTargetTank->GetCentralPosition() - myTank.GetCentralPosition();
+		//Vector2D toTarget = mTargetTank->GetCentralPosition() - myTank.GetCentralPosition();
 		//myTank.SetTargetPos(toTarget.GetReverse() * myTank.GetVelocity().Length());
 	}
 

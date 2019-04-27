@@ -124,7 +124,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 			mSteeringState = SS_IDLE;
 			mPath.clear();
 
-			if(mFuSMActivated)
+			if (mFuSMActivated)
 				cout << "FuSM" << endl;
 			else
 			{
@@ -137,7 +137,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 	{
 		mSpaceKeyDown = false;
 	}
-	
+
 	if (mFuSMActivated)
 	{
 		mFuSM_Manager->Update(*this, mTanksICanSee, mTanksICanHear, deltaTime);
@@ -176,10 +176,10 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		{
 			mInitialBrake = false;
 		}*/
-		
+
 		///////////////////////////////////////////////////
 		Vector2D obForce = mSteering->ObstacleAvoidance(this, true);
-		
+
 		Vector2D newPos = GetCentralPosition();
 		if (!obForce.isZero())
 		{
@@ -192,13 +192,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 			{
 				mObRotated = true;
 				RotateHeadingByRadian(angle * 10, deltaTime);
-
-				//fix this
-				tempForce = obForce;
-				tempForce.Truncate(mMaxForce);
-				//mVelocity = tempForce * 1.1f;
 			}
-			cout << obForce.x << ", " << obForce.y << endl;
 			mSteering->AddForce(obForce);
 		}
 		mOldPos = newPos;
@@ -249,38 +243,19 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 
 	if (mSteering->CheckWander())
 	{
-		mTargetPos = GetCentralPosition() + mVelocity; //(mVelocity * 10);
-		Vector2D toTarget = mTargetPos - GetCentralPosition();
-
-		/*float angleHeading = (float)asin((Cross(toTarget, mHeading) /
-			toTarget.Length() * mHeading.Length()));
-
-		float angleSide = (float)asin((Cross(toTarget, mSide) /
-			toTarget.Length() * mHeading.Length()));*/
-
+		mTargetPos = GetCentralPosition() + mVelocity; 
 		mVelocity.Truncate(GetMaxSpeed() / 1.05f);
 
-		/*if (abs(angleHeading) >= abs(angleSide) * 0.75f && abs(angleHeading) <= abs(angleSide) * 1.25f)
-		{
-			double length = mVelocity.Length();
-			cout << "hit" << endl;
-
-			mVelocity = (mHeading + Vec2DNormalize(mVelocity)) / 2;
-			mVelocity = mVelocity * length;
-		}*/
-
 		ChangeRotationStats(0.00872665f, 0.001f);
-		//ChangeMovementStats(0.0f);
 	}
 	else
 	{
 		ChangeRotationStats(0.0349066f, 0.01f);
-		//ChangeMovementStats(0.01f);
 	}
 
 	if (mSteering->CheckEvade() || mSteering->CheckWander())
 		ChangeMovementStats(0.0f);
-	else if(!mSteering->CheckEvade() && !mSteering->CheckWander())
+	else if (!mSteering->CheckEvade() && !mSteering->CheckWander())
 		ChangeMovementStats(0.01f);
 
 	if (mTargetTank)
@@ -292,7 +267,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 	//Rotate to face the target
 	//////////////////////////////////////////////////////////////////////
 	Vector2D toTarget;
-	if(mTargetTank)
+	if (mTargetTank)
 		toTarget = mTargetTank->GetCentralPosition() - GetCentralPosition();
 	else
 	{
@@ -302,58 +277,50 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		toTarget = mTargetPos - GetCentralPosition();
 	}
 
-	//if (!toTarget.isZero())
+	if (toTarget.LengthSq() > 10 || mSteering->CheckWander() || mSteering->CheckEvade() || !mFuSMActivated)
 	{
-		if (toTarget.LengthSq() > 10 || mSteering->CheckWander() || mSteering->CheckEvade() || !mFuSMActivated)
+		if (mVelocity.LengthSq() < 10 && !mFuSMActivated)
+			mRotateBlocked = true;
+
+		toTarget = mVelocity;
+		toTarget.Normalize();
+
+		float angle = (float)asin((Cross(toTarget, mHeading) /
+			toTarget.Length() * mHeading.Length()));
+
+		if (mCurrentState != TANKSTATE_IDLE)
 		{
-			bool rotateBlocked = false;
-			if (mVelocity.LengthSq() < 10 && !mFuSMActivated)
-				rotateBlocked = true;
+			mRotationBuffer /= 2;
+		}
 
-			toTarget = mVelocity;
-			toTarget.Normalize();
+		if (mSteering->CheckEvade() || /*abs(angle) < mRotationBuffer * 20 ||*/
+			ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
+		{
+			mMoving = true;
+		}
 
-			float angle = (float)asin((Cross(toTarget, mHeading) /
-				toTarget.Length() * mHeading.Length()));
-
-			if (mCurrentState != TANKSTATE_IDLE)
+		if (!mRotateBlocked)
+		{
+			//right
+			if (angle >= mRotationBuffer)
 			{
-				mRotationBuffer /= 2;
+				RotateHeadingByRadian(-mRotationAmount, deltaTime);
 			}
-
-			if (mSteering->CheckEvade() ||
-				ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
+			//left
+			else if (angle <= -mRotationBuffer)
 			{
-				mMoving = true;
+				RotateHeadingByRadian(mRotationAmount, deltaTime);
 			}
-
-			if (!rotateBlocked)
+			else
 			{
-				//right
-				if (angle >= mRotationBuffer)
-				{
-					RotateHeadingByRadian(-mRotationAmount, deltaTime);
-				}
-				//left
-				else if (angle <= -mRotationBuffer)
-				{
-					RotateHeadingByRadian(mRotationAmount, deltaTime);
-				}
-				else
-				{
-					Vector2D projForward = GetCentralPosition() + mHeading;
-					Vector2D projToTarget = (toTarget + GetCentralPosition()) - projForward;
+				Vector2D projForward = GetCentralPosition() + mHeading;
+				Vector2D projToTarget = (toTarget + GetCentralPosition()) - projForward;
 
-					if (projToTarget.LengthSq() > toTarget.LengthSq())
-						RotateHeadingByRadian(1.0f, deltaTime);
-				}
+				if (projToTarget.LengthSq() > toTarget.LengthSq())
+					RotateHeadingByRadian(1.0f, deltaTime);
 			}
 		}
-		else
-		{
-			//if(mSteering->CheckBrake())
-				//mSteering->Brake(this, 0.98f, false);
-		}
+		mRotateBlocked = false;
 	}
 
 	//Call parent update.

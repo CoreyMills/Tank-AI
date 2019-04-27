@@ -56,7 +56,6 @@ void m018585hFuSM_ObAvoidance::Update(m018585hTank& myTank, float deltaTime)
 			tempForce.Truncate(myTank.GetMaxForce());
 			myTank.GetVelocity() = tempForce * 1.5f;
 		}
-		cout << obForce.x << ", " << obForce.y << endl;
 		mStateForces.push_back(obForce);
 	}
 	mOldPos = newPos;

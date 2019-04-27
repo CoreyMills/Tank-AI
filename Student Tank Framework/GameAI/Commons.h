@@ -15,7 +15,7 @@ using namespace::std;
 
 //-------------------------------------------------------------------------------------------
 
-const string kTilemapPath			= "XML Data Files/BattleGround.xml";
+const string kTilemapPath			= "XML Data Files/Arena.xml";
 const string kScorePath				= "Scores/Scores.txt";
 const string kTankPath				= "XML Data Files/TankData.xml";
 const string kBulletPath			= "Images/Bullet.png";

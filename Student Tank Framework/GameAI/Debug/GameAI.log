@@ -1,2 +1,31 @@
-﻿  m018585hTank.cpp
+﻿  BaseTank.cpp
+  ControlledTank.cpp
+  GameObject.cpp
+  GameScreenLevel1.cpp
+  GameScreenManager.cpp
+  Guardian.cpp
+  LevelMap.cpp
+  ObstacleManager.cpp
+  PathFinder_DRS.cpp
+  PickUpManager.cpp
+  Projectile.cpp
+  ProjectileManager.cpp
+  Source.cpp
+  m018585hFuSM_Attack.cpp
+  m018585hFuSM_Base.cpp
+  m018585hFuSM_Gather.cpp
+  m018585hFuSM_ObAvoidance.cpp
+  m018585hFuSM_ReachEndPoint.cpp
+  m018585hFuSM_Run.cpp
+  m018585hFuSM_Search.cpp
+  Generating Code...
+  Compiling...
+  m018585hFuSM_Manager.cpp
+  m018585hSteeringBehaviour.cpp
+  m018585hTank.cpp
+  m018585h_DRS.cpp
+  TankManager.cpp
+  TestTank.cpp
+  Texture2D.cpp
+  Generating Code...
   GameAI.vcxproj -> D:\GitHub\Tank-AI\Student Tank Framework\Debug\GameAI.exe

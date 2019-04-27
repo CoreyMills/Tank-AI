@@ -90,6 +90,7 @@ public:
 	Vector2D GetManFireDir() { return mManFireDirection; }
 
 	void SetObRotated(bool newVal) { mObRotated = newVal; }
+	void SetRotateBlocked(bool newVal) { mRotateBlocked = newVal; }
 
 private:
 	m018585hSteeringBehaviour* mSteering;
@@ -114,6 +115,6 @@ private:
 
 	float mRotationBuffer, mMovementBuffer;
 	float mRotationAmount;
-	bool mRotating, mMoving, mObRotated;
+	bool mRotating, mMoving, mObRotated, mRotateBlocked;
 };
 #endif //M018585HTANK_H

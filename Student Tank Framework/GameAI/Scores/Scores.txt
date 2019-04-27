@@ -1339,3 +1339,30 @@ Tanks destroyed: 0	= 0
 Crates collected: 0	= 0
 Survival bonus': 2	= 10
 -------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: Guardian2   SCORE: 0
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 0	= 0
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: m018585hTank   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 2	= 5
+Survival bonus': 4	= 20
+-------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: Guardian2   SCORE: 20
+Bullets hit: 20		= 40
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 15	= 75
+-------------------------------------------------------------
