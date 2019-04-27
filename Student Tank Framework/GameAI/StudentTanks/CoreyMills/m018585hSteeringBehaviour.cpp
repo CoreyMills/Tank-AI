@@ -101,7 +101,7 @@ Vector2D m018585hSteeringBehaviour::Arrive(m018585hTank* myTank, Vector2D target
 {
 	if (mArriveOn || bypass)
 	{
-		const double decelerationTweaker = 1.0f;
+		const double decelerationTweaker = 3.0f;
 		Vector2D toTarget = targetPos - myTank->GetCentralPosition();
 		double dist = toTarget.Length();
 
@@ -109,7 +109,7 @@ Vector2D m018585hSteeringBehaviour::Arrive(m018585hTank* myTank, Vector2D target
 
 		if (dist > 0)
 		{
-			double speed = dist / ((double)deceleration * decelerationTweaker);
+			double speed = dist * (double)deceleration; // *decelerationTweaker);
 			speed = min(speed, myTank->GetMaxSpeed());
 
 			if (dist > distToBrake)

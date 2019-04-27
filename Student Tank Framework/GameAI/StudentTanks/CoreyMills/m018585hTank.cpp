@@ -179,7 +179,8 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		
 		///////////////////////////////////////////////////
 		Vector2D obForce = mSteering->ObstacleAvoidance(this, true);
-
+		
+		Vector2D newPos = GetCentralPosition();
 		if (!obForce.isZero())
 		{
 			Vector2D tempForce = Vec2DNormalize(obForce);
@@ -187,18 +188,20 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 			float angle = (float)asin((Cross(tempForce, mHeading) /
 				obForce.Length() * mHeading.Length()));
 
-			if (mOldPos == GetCentralPosition())
+			if (mOldPos == newPos)
 			{
 				mObRotated = true;
 				RotateHeadingByRadian(angle * 10, deltaTime);
 
+				//fix this
 				tempForce = obForce;
 				tempForce.Truncate(mMaxForce);
-				mVelocity = tempForce * 1.5f;
+				//mVelocity = tempForce * 1.1f;
 			}
+			cout << obForce.x << ", " << obForce.y << endl;
 			mSteering->AddForce(obForce);
 		}
-		mOldPos = GetCentralPosition();
+		mOldPos = newPos;
 		///////////////////////////////////////////////////
 
 		//Follow Path
@@ -212,7 +215,7 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 		mSteering->AddForce(mSteering->Seek(this, mTargetPos, false));
 
 		//Arrive
-		mSteering->AddForce(mSteering->Arrive(this, mTargetPos, 1.0f, 0.5f, Deceleration::fast, false));
+		mSteering->AddForce(mSteering->Arrive(this, mTargetPos, 1.0f, 0.9f, Deceleration::slow, false));
 
 		//Pursuit
 		mSteering->AddForce(mSteering->Pursuit(this, mTargetTank, false));
@@ -301,11 +304,13 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 
 	//if (!toTarget.isZero())
 	{
-		if (toTarget.LengthSq() > 10 || mSteering->CheckWander() || mSteering->CheckEvade())
+		if (toTarget.LengthSq() > 10 || mSteering->CheckWander() || mSteering->CheckEvade() || !mFuSMActivated)
 		{
-			//if (mFuSMActivated)
-				toTarget = mVelocity;
+			bool rotateBlocked = false;
+			if (mVelocity.LengthSq() < 10 && !mFuSMActivated)
+				rotateBlocked = true;
 
+			toTarget = mVelocity;
 			toTarget.Normalize();
 
 			float angle = (float)asin((Cross(toTarget, mHeading) /
@@ -316,40 +321,32 @@ void m018585hTank::Update(float deltaTime, SDL_Event e)
 				mRotationBuffer /= 2;
 			}
 
-			if (mFuSMActivated)
+			if (mSteering->CheckEvade() ||
+				ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
 			{
-				if (mSteering->CheckEvade() ||
-					ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
-				{
-					mMoving = true;
-				}
-			}
-			else
-			{
-				if (mSteering->CheckEvade() || /*abs(angle) < mRotationBuffer &&*/
-					ClosestPoint(GetCentralPosition() + mHeading, GetCentralPosition(), toTarget + GetCentralPosition()))
-				{
-					mMoving = true;
-				}
+				mMoving = true;
 			}
 
-			//right
-			if (angle >= mRotationBuffer)
+			if (!rotateBlocked)
 			{
-				RotateHeadingByRadian(-mRotationAmount, deltaTime);
-			}
-			//left
-			else if (angle <= -mRotationBuffer)
-			{
-				RotateHeadingByRadian(mRotationAmount, deltaTime);
-			}
-			else
-			{
-				Vector2D projForward = GetCentralPosition() + mHeading;
-				Vector2D projToTarget = (toTarget + GetCentralPosition()) - projForward;
+				//right
+				if (angle >= mRotationBuffer)
+				{
+					RotateHeadingByRadian(-mRotationAmount, deltaTime);
+				}
+				//left
+				else if (angle <= -mRotationBuffer)
+				{
+					RotateHeadingByRadian(mRotationAmount, deltaTime);
+				}
+				else
+				{
+					Vector2D projForward = GetCentralPosition() + mHeading;
+					Vector2D projToTarget = (toTarget + GetCentralPosition()) - projForward;
 
-				if (projToTarget.LengthSq() > toTarget.LengthSq())
-					RotateHeadingByRadian(1.0f, deltaTime);
+					if (projToTarget.LengthSq() > toTarget.LengthSq())
+						RotateHeadingByRadian(1.0f, deltaTime);
+				}
 			}
 		}
 		else
