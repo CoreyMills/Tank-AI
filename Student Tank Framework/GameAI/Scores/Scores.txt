@@ -1501,3 +1501,12 @@ Tanks destroyed: 0	= 0
 Crates collected: 0	= 0
 Survival bonus': 0	= 0
 -------------------------------------------------------------
+-------------------------------------------------------------
+Tank name: Guardian2   SCORE: 20
+Bullets hit: 0		= 0
+Rockets hit: 0		= 0
+Mines hit: 0		= 0
+Tanks destroyed: 0	= 0
+Crates collected: 0	= 0
+Survival bonus': 12	= 60
+-------------------------------------------------------------
